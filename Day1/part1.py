@@ -15,18 +15,25 @@ num_strs = {
 }
 
 
-
 data_path = Path(__file__).parent.joinpath('input', 'input1.txt')
-
 data = data_path.read_text().split('\n')
 
 cords = []
+pattern = r'(one|two|three|four|five|six|seven|eight|nine|ten|\d)'
+
 for input in data:
-    nums = re.findall(r'\d', input.lower())
-    i = int(f'{nums[0] if nums[0].isdigit() else num_strs[nums[0]]}{nums[-1]}')
-    cords.append(i)
+    matches = []
+    pos = 0
+    while pos < len(input):
+        match = re.search(pattern, input[pos:], re.IGNORECASE)
+        if match:
+            matches.append(match.group(0))
+            pos += match.start() + 1  # move to the next character after the current match starts
+        else:
+            break
 
-
+    cords.append(int(str(num_strs.get(matches[0], matches[0])) + str(num_strs.get(matches[-1], matches[-1]))))
 
 print(sum(cords))
-# answer 54388
+# answer #1 54388
+# answer #2 53515
